@@ -5,11 +5,11 @@ import bcrypt from 'bcrypt'
 import  jwt  from "jsonwebtoken";
 
 export const getAllUsers = async (req, res) => {
-    const users = await userModel.find()
     try {
+        const users = await userModel.find()
         return res.status(200).json({ message: 'List of all users', data: users })
     } catch (error) {
-        return res.status(400).json({ message: error.message })
+        return res.status(500).json({ message: error.message })
     }
 
 }
@@ -53,8 +53,7 @@ export const signIn = async (req, res) => {
         } else {
             const isExistUser = await userModel.findOne({ userName })
             if (!isExistUser) {
-                //unauthorized
-                return res.status(401).json({ message: 'username or password is incorrect' })
+                return res.status(401).json({ message: 'user is not exist' })
             } else {
                 const isComapared = bcrypt.compareSync(password , isExistUser.password)
                 if(!isComapared){
@@ -74,8 +73,8 @@ export const deleteUser = async (req, res) => {
     try {
         let { id } = req.params
         // console.log(id);
-        if (!id) {
-            return res.status(409).json({ message: 'Error, insert an Id to delete a specific user' })
+        if (!mongoose.Types.ObjectId.isValid(id) || !id) {
+            return res.status(409).json({ message: 'Invalid Id' })
         } else {
             const user = await userModel.findByIdAndDelete(id)
             // return res.status(200).json({user:user})
