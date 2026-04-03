@@ -79,4 +79,3 @@ Planned enhancements include:
 
 ---
 
-You can push this repository to GitHub when you are ready; nothing here assumes an automated deploy step.
