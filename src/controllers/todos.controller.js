@@ -3,7 +3,8 @@ import todoModel from "../DB/models/todo.model.js";
 import userModel from "../DB/models/user.model.js";
 export const getAllTodos = async (req, res) => {
     try {
-        const todos = await todoModel.find();
+        // get the user info for todos
+        const todos = await todoModel.find().populate('userId');//.populate('userId') get info for that objectId
         return res.status(200).json({ message: 'list of all todos', data: todos })
     } catch (error) {
         return res.status(400).json({ message: message.error })
