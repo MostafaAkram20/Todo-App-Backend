@@ -1,15 +1,20 @@
 import express from 'express'
 import bootstrap from './src/controllers/app.controller.js'
 import dotenv from 'dotenv';
+import cors from 'cors'
 dotenv.config();
 const app = express()
 const port = 3000
 
+app.use(cors({ // only port 3000 can make a request on server
+    origin: 'http://localhost:3000',
+    credentials: true // allow cookies and auth
+}))
 
 app.use(express.json())
 app.use(express.static('./src/static'))
 
-bootstrap(app , express) //app.controller.js
+bootstrap(app, express) //app.controller.js
 
 app.listen(port, () => console.log(`app listening on port ${port}!`))
 
