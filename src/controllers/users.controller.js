@@ -59,7 +59,8 @@ export const signIn = async (req, res) => {
                 if(!isComapared){
                     return res.status(400).json({message:'Username or password is incorrect'})
                 }else{ // payload and secret key
-                    const token = jwt.sign({id:isExistUser._id , isLoggedIn:true} , process.env.JWT_SECRET , {expiresIn:'1d'})
+                    //adding email to token
+                    const token = jwt.sign({id:isExistUser._id ,userName:isExistUser.userName, isLoggedIn:true} , process.env.JWT_SECRET , {expiresIn:'1d'})
                     return res.status(200).json({ message: 'user logged in successfully', token })
                 }
             }
@@ -97,12 +98,12 @@ export const updateUser = async(req , res)=>{
         if (!mongoose.Types.ObjectId.isValid(id) || !id) {
             return res.status(409).json({ message: 'Error, invalid Id' })
         } else {
-            const user = await userModel.findByIdAndUpdate(id , req.body , {new:true , runValidators:true})
+            const user = await userModel.findByIdAndUpdate(id , req.body , {returnDocument: 'after' , runValidators:true})
             // return res.status(200).json({user:user})
             if (!user) {
                 return res.status(400).json({ message: 'Error, User not found!' })
             } else {
-                return res.status(200).json({ message: 'User updated successfully' })
+                return res.status(200).json({ message: 'User updated successfully' , user:user })
             }
         }
 
