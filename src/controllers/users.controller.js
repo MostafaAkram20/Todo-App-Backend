@@ -6,11 +6,11 @@ import  jwt  from "jsonwebtoken";
 
 export const getAllUsers = async (req, res) => {
     try {
-        const users = await userModel.find()
+        const users = await userModel.find().select('userName firstName lastName dateOfBirth')//projection
         return res.status(200).json({ message: 'List of all users', data: users })
     } catch (error) {
         return res.status(500).json({ message: error.message })
-    }
+    } 
 
 }
 export const signUp = async (req, res) => {
@@ -103,6 +103,10 @@ export const updateUser = async(req , res)=>{
             if (!user) {
                 return res.status(400).json({ message: 'Error, User not found!' })
             } else {
+                if(req.body.password){
+                    const hashedPassword = bcrypt.hashSync(req.body.password, 8)
+                    user.password = hashedPassword
+                }
                 return res.status(200).json({ message: 'User updated successfully' , user:user })
             }
         }
