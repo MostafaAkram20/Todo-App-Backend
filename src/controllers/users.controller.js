@@ -6,7 +6,7 @@ import  jwt  from "jsonwebtoken";
 
 export const getAllUsers = async (req, res) => {
     try {
-        const users = await userModel.find().select('userName firstName lastName dateOfBirth')//projection
+        const users = await userModel.find().select('userName firstName lastName role dateOfBirth')//projection
         return res.status(200).json({ message: 'List of all users', data: users })
     } catch (error) {
         return res.status(500).json({ message: error.message })
@@ -28,13 +28,14 @@ export const signUp = async (req, res) => {
                 return res.status(409).json({ message: 'user is already exist' })
             } else {
                 const hashedPassword = bcrypt.hashSync(password, 8)
-                const user = await userModel.create({
+                await userModel.create({
                     userName: userName,
                     firstName: firstName,
                     lastName: lastName,
                     password: hashedPassword,
                     dateOfBirth:dateOfBirth
                 })
+                let user = await userModel.find().select('userName firstName lastName role dateOfBirth')
                 return res.status(201).json({ message: 'Account is created successfully' , user })
             }
         }
@@ -116,3 +117,6 @@ export const updateUser = async(req , res)=>{
     }
 }
 
+export const userProfile = async(req , res)=>{
+
+}
