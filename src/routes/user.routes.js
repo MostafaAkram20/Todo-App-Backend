@@ -1,12 +1,13 @@
 import { Router } from "express";
-import {getAllUsers , signUp ,signIn, deleteUser, updateUser} from '../controllers/users.controller.js'
+import * as userController from '../controllers/users.controller.js'
+import { auth, restrictTo } from './../middlewares/auth.middleware.js'
 const router = Router();
 
-router.get('/' , getAllUsers)
-router.post('/' , signUp)
-router.post('/login' , signIn)
-router.delete('/:id' , deleteUser)
-router.patch('/:id' , updateUser)
+router.get('/', userController.getAllUsers)
+router.post('/', userController.signUp)
+router.post('/login', userController.signIn)
+router.delete('/:id', auth, restrictTo('user'), userController.deleteUser)
+router.patch('/:id',auth, restrictTo('admin','user'), userController.updateUser)
 
 
 export default router
