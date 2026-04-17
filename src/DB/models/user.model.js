@@ -1,6 +1,11 @@
 import mongoose from "mongoose";
 import validator from 'validator';
 const userSchema = new mongoose.Schema({
+    role:{
+        type:String,
+        enum:['user' , 'admin'],
+        default:'user'
+    },
     userName: {
         type: String,
         required: true,
@@ -42,7 +47,6 @@ const userSchema = new mongoose.Schema({
         type: Date,
         default: null,
     }
-
 }, { timestamps: true });
 
 
