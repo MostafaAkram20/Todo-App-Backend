@@ -1,0 +1,17 @@
+search for __v //done
+
+difference between //done
+app.use('/*example', (req, res) => res.json({ message: 'Error-404 page not found' })) // done
+app.all('/*example', (req, res) => res.json({ message: 'Error-404 page not found' })) //done
+
+npm i cors
+
+bcrypt hashing location 
+
+hash and hashSync which is recommended //done
+
+adding to using token (authentication & authorization)
+
+create a commit for each file on github
+
+

@@ -1,0 +1,25 @@
+handle page not found 
+
+usermodel.populate
+get info for that todo
+
+update user //done
+{new:true} -> {returnDocument:'after'} 
+
+
+npm i cors
+
+adding email to token 
+
+
+return the user after updated 
+
+
+
+
+// wednesday
+
+
+update password
+
+hide password when get all users
