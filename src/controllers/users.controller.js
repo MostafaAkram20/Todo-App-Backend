@@ -69,10 +69,9 @@ export const signIn = async (req, res) => {
         return res.status(500).json({ message: 'Error while logging user', msg: error.message })
     }
 }
-
 export const deleteUser = async (req, res) => {
     try {
-        let { id } = req.params
+        const { id } = req.params
         // console.log(id);
         if (!mongoose.Types.ObjectId.isValid(id) || !id) {
             return res.status(409).json({ message: 'Invalid Id' })
@@ -90,27 +89,49 @@ export const deleteUser = async (req, res) => {
         return res.status(500).json({ message: 'Error accured while deleting the user', msg: error.message })
     }
 }
-
-export const updateUser = async (req, res) => {
+export const updatePassword = async (req, res) => {
     try {
-        let { id } = req.params
-        // console.log(id);
-        if (!mongoose.Types.ObjectId.isValid(id) || !id) {
-            return res.status(409).json({ message: 'Error, invalid Id' })
-        } else {
-            const user = await userModel.findByIdAndUpdate(id, req.body, { returnDocument: 'after', runValidators: true })
-            if (!user) {
-                return res.status(400).json({ message: 'Error, User not found!' })
-            } else {
-                if (req.body.password) {
-                    const hashedPassword = bcrypt.hashSync(req.body.password, 8)
-                    user.password = hashedPassword
-                }
-                return res.status(200).json({ message: 'User updated successfully', user: user })
-            }
+        const { id } = req.params;
+
+        if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: 'Invalid ID' });
+        }
+        if (req.user.id !== id) {
+            return res.status(403).json({ message: 'Not authorized' });
         }
 
+        const { currentPassword, newPassword } = req.body;
+
+        if (!currentPassword || !newPassword) {
+            return res.status(400).json({ message: 'All fields are required' });
+        }
+
+        const user = await userModel.findById(id);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const isMatch = await bcrypt.compare(currentPassword, user.password);
+
+        if (!isMatch) {
+            return res.status(400).json({ message: 'Incorrect current password' });
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        user.password = hashedPassword;
+        await user.save();
+
+        return res.status(200).json({
+            message: 'Password updated successfully'
+        });
+
     } catch (error) {
-        return res.status(500).json({ message: 'Error accured while updating the user', msg: error.message })
+        return res.status(500).json({
+            message: 'Error while updating password',
+            error: error.message,
+            stack:error.stack
+        });
     }
-}
+};
