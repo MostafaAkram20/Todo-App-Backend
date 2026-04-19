@@ -4,10 +4,10 @@ import dotenv from 'dotenv';
 import cors from 'cors'
 dotenv.config();
 const app = express()
-const port = 3000
+const port = process.env.PORT || 3000
 
-app.use(cors({ // only port 3000 can make a request on server
-    origin: 'http://localhost:3000',
+app.use(cors({ // anyone can make a request to the server
+    origin: '*',
     credentials: true // allow cookies and auth
 }))
 
