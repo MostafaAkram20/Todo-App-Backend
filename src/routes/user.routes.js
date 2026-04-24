@@ -7,7 +7,7 @@ router.get('/', userController.getAllUsers)
 router.post('/', userController.signUp)
 router.post('/login', userController.signIn)
 router.delete('/:id', auth, restrictTo('admin'), userController.deleteUser)
-router.patch('/:id',auth, restrictTo('admin','user'), userController.updatePassword)
+router.patch('/',auth, restrictTo('admin','user'), userController.updatePassword)
 
 
 export default router

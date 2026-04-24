@@ -13,6 +13,7 @@ export const getAllTodos = async (req, res) => {
 export const addTodo = async (req, res) => {
     try {
         const { userId, title, status } = req.body
+        req.userId = req.id
         if (!userId || !title || !status) {
             return res.status(400).json({ message: 'missing some info for todo' })
         } else {
